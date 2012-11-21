@@ -108,7 +108,7 @@ fixperms() {
 new(){
   project="$1"
   echo "Creating new Symphony: $project"
-  git clone -b 0.6.0 --depth 1 git://github.com/firegoby/symphonyno5.git $project
+  git clone -b master --depth 1 git://github.com/firegoby/symphonyno5.git $project
   cd $project
   echo "Removing Symphony No.5 git history"
   rm -rf .git
