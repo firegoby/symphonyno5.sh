@@ -21,33 +21,34 @@ Symphony No.5 Command Line Tool is a bash script used to easily adminster [Symph
 1. Copy `symphonyno5.sh` to a directory in your `$PATH`
 2. Run `chmod +x symphonyno5.sh` to make it executable
 3. Optional - Create a symlink to reference it by a different name
-    `ln -s symphonyno5.sh symphonyno5`
+
+    ln -s symphonyno5.sh symphonyno5
 
 ## Usage
 
 ### Create a new project
 
-   `symphonyno5.sh new projectname`
+    symphonyno5.sh new projectname
 
 ### Update/install Symphony Extensions from `extensions.csv`
 
-    ` symphonyno5.sh submodules`
+    symphonyno5.sh submodules
 
 ### Compile Coffescript & Javascript
 
-    `symphonyno5.sh compile scripts`
+    symphonyno5.sh compile scripts
 
 ### Compile Less CSS
 
-    `symphonyno5.sh compile styles`
+    symphonyno5.sh compile styles
 
 ### Run post installatin cleanup
 
-    `symphonyno5.sh postinstall`
+    symphonyno5.sh postinstall
 
 ### Set directory & file permissions
 
-    `symphonyno5.sh fixperms 0775 0664`
+    symphonyno5.sh fixperms 0775 0664
 
 
 ## Changelog
