@@ -1,7 +1,7 @@
 # Symphony No.5 Command Line Tool
 
-* Version 0.1.0
-* Date: 21st November 2012
+* Version 0.1.1
+* Date: 22nd November 2012
 
 ## Overview
 
@@ -18,39 +18,40 @@ Symphony No.5 Command Line Tool is a bash script used to easily adminster [Symph
 
 ## Installation
 
-1. Copy `symphonyno5.sh` to a directory in your `$PATH`
-2. Run `chmod +x symphonyno5.sh` to make it executable
-3. Optional - Create a symlink to reference it by a different name
-
-    ln -s symphonyno5.sh symphonyno5
+1. Copy `symphonyno5` to a directory in your `$PATH`
+2. Run `chmod +x symphonyno5` to make it executable
 
 ## Usage
 
+***Note**: All commands other than `new` should be run from a Symphony root directory.*
+
 ### Create a new project
 
-    symphonyno5.sh new projectname
+    symphonyno5 new projectname
 
 ### Update/install Symphony Extensions from `extensions.csv`
 
-    symphonyno5.sh submodules
+    symphonyno5 extensions
 
 ### Compile Coffescript & Javascript
 
-    symphonyno5.sh compile scripts
+    symphonyno5 compile scripts
 
 ### Compile Less CSS
 
-    symphonyno5.sh compile styles
+    symphonyno5 compile styles
 
 ### Run post installatin cleanup
 
-    symphonyno5.sh postinstall
+    symphonyno5 postinstall
 
 ### Set directory & file permissions
 
-    symphonyno5.sh fixperms 0775 0664
-
+    symphonyno5 fixperms 0775 0664
 
 ## Changelog
 
+* 0.1.1 - 22 Nov 12 
+  * Drop the `.sh` extension from the script
+  * Rename `submodules` command to `extensions`
 * 0.1.0 - 21 Nov 12 - Initial release

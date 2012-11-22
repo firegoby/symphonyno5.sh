@@ -5,8 +5,8 @@ usage() {
   echo "Usage:"
   echo "Create new project:"
   echo "    $scriptname new projectname"
-  echo "Update git submodules from extensions.csv:"
-  echo "    $scriptname submodules"
+  echo "Update/install git submodules from extensions.csv:"
+  echo "    $scriptname extensions"
   echo "Compile Coffescript & Javascript into production.min.js:"
   echo "    $scriptname compile scripts"
   echo "Compile Less CSS into compressed main.css:"
@@ -39,37 +39,43 @@ submodules() {
 postinstall() {
   if [ -f index.php -a -d symphony ]
   then
-    read -p "Do you want to remove the README and LICENSE files? (y/n) " -n 1
+    echo "This command should *only* be run directly after completing the installation script (/install/)"
+    read -p "Are you sure you wish to continue (y/n) " -n 1
     if [[ $REPLY =~ ^[Yy]$ ]]
     then
       echo ""
-      echo "Removing README and LICENSE files"
-      git rm -q README.* LICENSE.*
+      read -p "Do you want to remove the README and LICENSE files? (y/n) " -n 1
+      if [[ $REPLY =~ ^[Yy]$ ]]
+      then
+        echo ""
+        echo "Removing README and LICENSE files"
+        git rm -q README.* LICENSE.*
+      fi
+      if [ -f .htaccess ]
+      then
+        echo "Adding .htaccess to git"
+        git add .htaccess
+      fi
+      echo "Adding manifest.dev/config.php to git"
+      git add manifest.dev/config.php
+      if [ ! -f manifest.prod/config.php ]
+      then
+        echo "Copying manifest.dev/config.php to manifest.prod and adding to git"
+        cp manifest.dev/config.php manifest.prod/config.php
+        git add manifest.prod/config.php
+      fi
+      if [ -d install ]
+      then
+        echo "Removing installation files"
+        git rm -rfq install
+      fi
+      git commit -m "Post-install: Delete installation files & docs, add .htaccess"
+      scriptname=`basename $0`
+      echo ""
+      echo "Recommend setting your directory & file permissions, for example:"
+      echo "   $scriptname fixperms 0775 0664"
+      echo "   git commit -am \"Set dir & file permissions to 0775 0664\""
     fi
-    if [ -f .htaccess ]
-    then
-      echo "Adding .htaccess to git"
-      git add .htaccess
-    fi
-    echo "Adding manifest.dev/config.php to git"
-    git add manifest.dev/config.php
-    if [ ! -f manifest.prod/config.php ]
-    then
-      echo "Copying manifest.dev/config.php to manifest.prod and adding to git"
-      cp manifest.dev/config.php manifest.prod/config.php
-      git add manifest.prod/config.php
-    fi
-    if [ -d install ]
-    then
-      echo "Removing installation files"
-      git rm -rfq install
-    fi
-    git commit -m "Post-install: Delete installation files & docs, add .htaccess"
-    scriptname=`basename $0`
-    echo ""
-    echo "Recommend setting your directory & file permissions, for example:"
-    echo "   $scriptname fixperms 0775 0664"
-    echo "   git commit -am \"Set dir & file permissions to 0775 0664\""
   else
     echo "It doesn't look like you're in the root directory of a Symphony project! Aborting."
   fi
@@ -146,7 +152,7 @@ new(){
 cmd=$1
 case $cmd in
         new) new $2;;
- submodules) submodules;;
+ extensions) submodules;;
 postinstall) postinstall;;
     compile) compile $2;;
    fixperms) fixperms $2 $3;;
