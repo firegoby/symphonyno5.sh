@@ -1,7 +1,7 @@
 # Symphony No.5 Command Line Tool
 
-* Version 0.1.1
-* Date: 22nd November 2012
+* Version 0.2.0
+* Date: 24th November 2012
 
 ## Overview
 
@@ -12,9 +12,9 @@ Symphony No.5 Command Line Tool is a bash script used to easily adminster [Symph
 * Create and setup new projects
 * Update/install Symphony Extensions as git submodules from `extensions.csv`
 * Compile & concatenate Coffeescript & Javascript files to a single minified production file
-* Compile Less CSS files into single compressed production file
-* Cleanup files after installation
+* Compile CSS files into single compressed production file (Less, Sass & Stylus support)
 * Set directory & file permissions for the project
+* Fix directory & file permissions to those set in `manifest/config.php`
 
 ## Installation
 
@@ -23,7 +23,7 @@ Symphony No.5 Command Line Tool is a bash script used to easily adminster [Symph
 
 ## Usage
 
-***Note**: All commands other than `new` should be run from a Symphony root directory.*
+***Note**: All commands other than `new` should be run from a Symphony CMS root directory.*
 
 ### Create a new project
 
@@ -33,24 +33,35 @@ Symphony No.5 Command Line Tool is a bash script used to easily adminster [Symph
 
     symphonyno5 extensions
 
-### Compile Coffescript & Javascript
+### Compile all assets to single minifed production file and update `master.xsl`
+
+    symphonyno5 compile
+
+### Compile just Coffescript & Javascript
 
     symphonyno5 compile scripts
 
-### Compile Less CSS
+### Compile just Less, Sass or Stylus Stylesheets
 
     symphonyno5 compile styles
 
-### Run post installatin cleanup
-
-    symphonyno5 postinstall
-
 ### Set directory & file permissions
 
-    symphonyno5 fixperms 0775 0664
+    symphonyno5 setperms 0775 0664
+
+### Fix directory & file permissions to those set in `manifest/config.php`
+
+    symphonyno5 fixperms
 
 ## Changelog
 
+* 0.2.0 - 24 Nov 12
+  * Remove Ant build script support
+  * Compile javascript via Curl API call to Google Closure
+  * Retask `fixperms` command
+  * Add `setperms` command
+  * Add plain `compile` command to compile all assets, CSS & JS
+  * Misc refactoring/cleanup of code
 * 0.1.1 - 22 Nov 12 
   * Drop the `.sh` extension from the script
   * Rename `submodules` command to `extensions`
