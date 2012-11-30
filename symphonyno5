@@ -204,7 +204,8 @@ new(){
       echo ""
       echo "Aborting."
       exit 1
-    else
+    elif [[ $REPLY =~ ^[Yy]$ ]]
+    then
       echo ""
       read -p "Do you want to remove the README and LICENSE files? (y/n) " -n 1
       if [[ $REPLY =~ ^[Yy]$ ]]
