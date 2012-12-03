@@ -15,15 +15,6 @@ usage() {
   echo "Update/install git submodules from extensions.csv"
   echo "    $scriptname extensions"
   echo ""
-  echo "Compile all assets (Scripts & Styles)"
-  echo "    $scriptname compile"
-  echo ""
-  echo "Compile Coffescript & Javascript (Google Closure minify)"
-  echo "    $scriptname compile scripts"
-  echo ""
-  echo "Compile CSS (Less, Sass or Stylus supported)"
-  echo "    $scriptname compile styles"
-  echo ""
   echo "Set manifest & workspace directories' file permissions"
   echo "    $scriptname setperms 0775 0664"
   echo ""
@@ -51,108 +42,6 @@ extensions() {
     git submodule update --init
   else
     echo "Error: Can't find an extensions.csv file! Aborting."
-  fi
-}
-
-compile() {
-  verifySymphonyRoot
-  case $1 in
-    scripts) compilescripts;;
-    styles) compilestyles;;
-    *) compilescripts
-      compilestyles;;
-  esac
-}
-
-compilescripts() {
-  compilecoffeescripts
-  concatscripts workspace/scripts/production.js
-  closurecompilejs workspace/scripts/production.js workspace/scripts/production.min.js
-  if [ $? -eq 0 ]
-  then
-    cd workspace/scripts
-    rm production-*.min.js
-    echo "Removed old production-SHA1.min.js files"
-    newsha=`shasum production.min.js | awk '{print substr($0,0,10)}'`
-    mv production.min.js production-${newsha}.min.js
-    echo "Moved production.min.js to SHA1 tagged 'production-$newsha.min.js'"
-    sed -i '' "s|production-[a-f0-9]*\.min\.js|production-$newsha.min.js|" ../utilities/master.xsl
-    echo "Updated master.xsl with new production-$newsha.min.js"
-    # return to root in case run as part of a chain
-    cd ../..
-  fi
-}
-
-compilecoffeescripts() {
-  find workspace/scripts -name "*.coffee" -exec coffee -cl '{}' \; -exec echo "Coffeescript compiled {}" \;
-}
-
-concatscripts() {
-  target=$1
-  rm -f $target
-  files=`awk '/CONCAT_JS_LIST_START/ {flag=1;next} /CONCAT_JS_LIST_END/ {flag=0} flag {print}' workspace/utilities/master.xsl | grep -Po 'src="\K.*?(?=")'`
-  for file in $files
-  do
-    cat .$file >> $target
-    echo "Concatenated .$file to `basename $target`"
-  done
-}
-
-closurecompilejs() {
-  src=$1
-  target=$2
-  echo "Requesting compilation of `basename $src` from Google Closure Compiler..."
-  curl -s \
-    -d compilation_level=WHITESPACE_ONLY \
-    -d output_format=text \
-    -d output_info=compiled_code \
-    --data-urlencode js_code@$src \
-    -o $target \
-    http://closure-compiler.appspot.com/compile
-  if [ $? -eq 0 ]
-  then
-    echo "Google Closure compiled `basename $src` to $target"
-  else
-    echo "Google Closure failed to compile `basename $src`. Aborting."
-    exit 1
-  fi
-}
-
-compilestyles() {
-  cd workspace/styles
-  if [ -f main.less ]
-  then
-    echo "Compiling using Less CSS..."
-    lessc main.less > main.css
-    lessc --compress main.less > production.min.css
-  elif [ -f main.sass ]
-  then
-    echo "Compiling using Sass (.sass format)..."
-    sass main.sass main.css
-    sass --style compressed main.sass production.min.css
-  elif [ -f main.scss ]
-  then
-    echo "Compiling using Sass (.scss format)..."
-    sass main.scss main.css
-    sass --style compressed main.scss production.min.css
-  elif [ -f main.styl ]
-  then
-    echo "Compiling using Stylus..."
-    stylus < main.styl > main.css
-    stylus -c < main.styl > production.min.css
-  fi
-  if [ $? -eq 0 ]
-  then
-    echo "Compiled styles into production.min.css"
-    rm -f production-*.min.css
-    echo "Removed old production-SHA1.min.css files"
-    newsha=`shasum production.min.css | awk '{print substr($0,0,10)}'`
-    mv production.min.css production-${newsha}.min.css
-    echo "Moved production.min.css to SHA1 tagged 'production-$newsha.min.css'"
-    sed -i '' "s|production-[a-f0-9]*\.min\.css|production-$newsha.min.css|" ../utilities/master.xsl
-    echo "Updated master.xsl with new production-$newsha.min.css"
-  else
-    echo "Error: CSS Compilation failed! Aborting."
   fi
 }
 
@@ -261,7 +150,6 @@ cmd=$1
 case $cmd in
         new) new $2;;
  extensions) extensions;;
-    compile) compile $2;;
    setperms) setperms $2 $3;;
    fixperms) fixperms;;
           *) usage

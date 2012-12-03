@@ -1,7 +1,7 @@
 # Symphony No.5 Command Line Tool
 
-* Version 0.2.0
-* Date: 24th November 2012
+* Version 0.3.0
+* Date: 3rd December 2012
 
 ## Overview
 
@@ -11,8 +11,6 @@ Symphony No.5 Command Line Tool is a bash script used to easily adminster [Symph
 
 * Create and setup new projects
 * Update/install Symphony Extensions as git submodules from `extensions.csv`
-* Compile & concatenate Coffeescript & Javascript files to a single minified production file
-* Compile CSS files into single compressed production file (Less, Sass & Stylus support)
 * Set directory & file permissions for the project
 * Fix directory & file permissions to those set in `manifest/config.php`
 
@@ -33,18 +31,6 @@ Symphony No.5 Command Line Tool is a bash script used to easily adminster [Symph
 
     symphonyno5 extensions
 
-### Compile all assets to single minifed production file and update `master.xsl`
-
-    symphonyno5 compile
-
-### Compile just Coffescript & Javascript
-
-    symphonyno5 compile scripts
-
-### Compile just Less, Sass or Stylus Stylesheets
-
-    symphonyno5 compile styles
-
 ### Set directory & file permissions
 
     symphonyno5 setperms 0775 0664
@@ -53,8 +39,16 @@ Symphony No.5 Command Line Tool is a bash script used to easily adminster [Symph
 
     symphonyno5 fixperms
 
+## Frequently Asked Questions
+
+1. **What happened to all the CSS & Javascript compilation stuff!?**
+
+  It got moved to a dedicated Symphony extension [Asset Compiler](http://github.com/firegoby/asset_compiler) - take a look! If you still need to the old functionality use git to checkout `0.2.0`
+
 ## Changelog
 
+* 0.3.0 - 3 Dec 12
+  * Removed `compile` commands
 * 0.2.0 - 24 Nov 12
   * Remove Ant build script support
   * Compile javascript via Curl API call to Google Closure
